@@ -15,18 +15,16 @@ def rgb_to_hex(rgb):
 st.markdown("""
 <style>
 
-/* cela aplikacija */
-.stApp {
-    background: transparent;
-}
-
-/* glavni wrapper */
+/* glavni container – Cloud-safe */
 section[data-testid="stMain"] {
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.35);
+    background-color: rgba(255, 255, 255, 0.25);  /* NIJE potpuno transparentno */
     border-radius: 20px;
     padding: 1rem;
+
+    /* fallback za Cloud */
+    border: 1px solid rgba(255,255,255,0.35);
 }
+
 
 
 </style>
