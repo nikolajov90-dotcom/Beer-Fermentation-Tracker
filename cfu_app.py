@@ -12,28 +12,25 @@ def srm_to_rgb(srm):
 def rgb_to_hex(rgb):
     return '#%02x%02x%02x' % rgb
 
-st.markdown("""
-<style>
-
-/* glavni container – Cloud-safe */
-section[data-testid="stMain"] {
-    background-color: rgba(255, 255, 255, 0.25);  /* NIJE potpuno transparentno */
-    border-radius: 20px;
-    padding: 1rem;
-
-    /* fallback za Cloud */
-    border: 1px solid rgba(255,255,255,0.35);
-}
-
-
-
-</style>
-""", unsafe_allow_html=True)
-
 
 tab_cfu, tab_color, tab_ref = st.tabs(
     ["Praćenje toka fermentacije (CFU)", "Izračunavanje obojenosti piva (EBC/SRM)", "Skala obojenosti"]
 )
+
+st.markdown("""
+<style>
+
+/* CLOUD SAFE MAIN BOX */
+#cloud-safe-box {
+    background: rgba(255, 255, 255, 0.80);
+    border-radius: 22px;
+    padding: 2rem;
+    margin-top: 1rem;
+    box-shadow: 0 0 35px rgba(0,0,0,0.35);
+}
+
+</style>
+""", unsafe_allow_html=True)
 
 
 with tab_cfu:
@@ -216,3 +213,4 @@ with tab_ref:
             """,
             unsafe_allow_html=True
         )
+
