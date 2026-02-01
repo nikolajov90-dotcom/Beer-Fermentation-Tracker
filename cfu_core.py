@@ -3,6 +3,15 @@ import matplotlib.pyplot as plt
 def cfu_ml(colonies, dilution, plated_volume_ml):
     return colonies / (dilution * plated_volume_ml)
 
+def srm_to_rgb(srm):
+    r = max(0, min(255, int(255 * (0.975 ** srm))))
+    g = max(0, min(255, int(245 * (0.88 ** srm))))
+    b = max(0, min(255, int(220 * (0.7 ** srm))))
+    return r, g, b
+
+def rgb_to_hex(rgb):
+    return '#%02x%02x%02x' % rgb
+
 
 times = []
 cfu_values = []
