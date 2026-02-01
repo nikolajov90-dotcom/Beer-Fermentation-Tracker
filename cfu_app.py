@@ -15,31 +15,19 @@ def rgb_to_hex(rgb):
 st.markdown("""
 <style>
 
-/* App background */
+/* cela aplikacija */
 .stApp {
-    background-color: #f5f6f8;
+    background: transparent;
 }
 
-/* HEADER + TABS */
-div[data-testid="stHeader"],
-div[data-testid="stTabs"] {
-    background: rgba(255, 255, 255, 0.9) !important;
-    backdrop-filter: blur(6px);
-    border-bottom: 1px solid #ccc;
-    z-index: 999;
+/* glavni streamlit wrapper */
+section[data-testid="stMain"] {
+    background: transparent;
 }
-
-/* Main content panel */
-[data-testid="stMainBlockContainer"] {
-    background-color: rgba(255,255,255,0.85);
-    padding: 2rem;
-    border-radius: 20px;
-    box-shadow: 0px 0px 30px rgba(0,0,0,0.3);
 
 
 </style>
 """, unsafe_allow_html=True)
-
 
 
 tab_cfu, tab_color, tab_ref = st.tabs(
@@ -48,14 +36,6 @@ tab_cfu, tab_color, tab_ref = st.tabs(
 
 
 with tab_cfu:
-    st.markdown("""
-    <div class="tab-panel" style="
-        background: rgba(255,255,255,0.85);
-        padding: 2rem;
-        border-radius: 20px;
-    ">
-    """, unsafe_allow_html=True)
-
     st.title("CFU metoda")
     st.markdown("***Osnovi biotehnologije 2025/26***")
 
@@ -168,13 +148,6 @@ if st.session_state.data:
 
 with tab_color:
 
-    st.markdown("""
-    <div class="tab-panel" style="
-        background: rgba(255,255,255,0.85);
-        padding: 2rem;
-        border-radius: 20px;
-    ">
-    """, unsafe_allow_html=True)
     st.header("Spektrofotometrijsko merenje obojenosti")
 
     od430 = st.number_input(
@@ -210,14 +183,6 @@ with tab_color:
             "Izračunata obojenost predstavlja približu vrednost u odnosu na referentne EBC/SRM standarde."
         )
 with tab_ref:
-
-    st.markdown("""
-    <div class="tab-panel" style="
-        background: rgba(255,255,255,0.85);
-        padding: 2rem;
-        border-radius: 20px;
-    ">
-    """, unsafe_allow_html=True)
 
     st.header("EBC / SRM referentne skale")
 
