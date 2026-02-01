@@ -12,16 +12,53 @@ def srm_to_rgb(srm):
 def rgb_to_hex(rgb):
     return '#%02x%02x%02x' % rgb
 
+st.markdown("""
+<style>
+
+/* App background */
+.stApp {
+    background-color: #f5f6f8;
+}
+
+/* HEADER + TABS */
+div[data-testid="stHeader"],
+div[data-testid="stTabs"] {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid #ccc;
+    z-index: 999;
+}
+
+/* Main content panel */
+[data-testid="stMainBlockContainer"] {
+    background-color: rgba(255,255,255,0.85);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0px 0px 30px rgba(0,0,0,0.3);
+
+
+</style>
+""", unsafe_allow_html=True)
+
+
 
 tab_cfu, tab_color, tab_ref = st.tabs(
     ["Praćenje toka fermentacije (CFU)", "Izračunavanje obojenosti piva (EBC/SRM)", "Skala obojenosti"]
 )
 
-with tab_cfu:
-    st.header("Praćenje toka fermentacije (CFU)")
 
-st.title("CFU metoda")
-st.markdown("""***Osnovi biotehnologije 2025/26***""")
+with tab_cfu:
+    st.markdown("""
+    <div class="tab-panel" style="
+        background: rgba(255,255,255,0.85);
+        padding: 2rem;
+        border-radius: 20px;
+    ">
+    """, unsafe_allow_html=True)
+
+    st.title("CFU metoda")
+    st.markdown("***Osnovi biotehnologije 2025/26***")
+
 def cfu_ml(colonies, dilution, plated_volume_ml):
     return colonies / (dilution * plated_volume_ml)
 # Učitavanje pozadine
@@ -44,23 +81,6 @@ def set_bg(img_file):
     )
 
 set_bg("background.jpg")
-
-st.markdown("""
-<style>
-
-/* Pozadina aplikacije */
-[data-testid="stAppViewContainer"] {
-    background: transparent;
-}
-
-/* Glavni content panel */
-[data-testid="stMainBlockContainer"] {
-    background-color: rgba(255,255,255,0.85);
-    padding: 2rem;
-    border-radius: 20px;
-}
-</style>
-""", unsafe_allow_html=True)
 
 st.markdown("""
 <style>
@@ -147,6 +167,14 @@ if st.session_state.data:
         st.session_state.data = []
 
 with tab_color:
+
+    st.markdown("""
+    <div class="tab-panel" style="
+        background: rgba(255,255,255,0.85);
+        padding: 2rem;
+        border-radius: 20px;
+    ">
+    """, unsafe_allow_html=True)
     st.header("Spektrofotometrijsko merenje obojenosti")
 
     od430 = st.number_input(
@@ -182,6 +210,15 @@ with tab_color:
             "Izračunata obojenost predstavlja približu vrednost u odnosu na referentne EBC/SRM standarde."
         )
 with tab_ref:
+
+    st.markdown("""
+    <div class="tab-panel" style="
+        background: rgba(255,255,255,0.85);
+        padding: 2rem;
+        border-radius: 20px;
+    ">
+    """, unsafe_allow_html=True)
+
     st.header("EBC / SRM referentne skale")
 
     ref = [
