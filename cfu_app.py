@@ -3,6 +3,13 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import base64
 
+# --------------------------------------------------
+# Helper functions
+# --------------------------------------------------
+
+def cfu_ml(colonies, dilution, plated_volume_ml):
+    return colonies / (dilution * plated_volume_ml)
+
 def srm_to_rgb(srm):
     r = max(0, min(255, int(255 * (0.975 ** srm))))
     g = max(0, min(255, int(245 * (0.88 ** srm))))
@@ -10,41 +17,11 @@ def srm_to_rgb(srm):
     return r, g, b
 
 def rgb_to_hex(rgb):
-    return '#%02x%02x%02x' % rgb
+    return "#%02x%02x%02x" % rgb
 
-
-tab_cfu, tab_color, tab_ref = st.tabs(
-    ["Praćenje toka fermentacije (CFU)", "Izračunavanje obojenosti piva (EBC/SRM)", "Skala obojenosti"]
-)
-
-st.markdown("""
-<style>
-
-/* CLOUD SAFE MAIN BOX */
-#cloud-safe-box {
-    background: rgba(255, 255, 255, 0.80);
-    border-radius: 22px;
-    padding: 2rem;
-    margin-top: 1rem;
-    box-shadow: 0 0 35px rgba(0,0,0,0.35);
-}
-
-</style>
-""", unsafe_allow_html=True)
-
-
-with tab_cfu:
-    st.title("CFU metoda")
-    st.markdown("***Osnovi biotehnologije 2025/26***")
-
-def cfu_ml(colonies, dilution, plated_volume_ml):
-    return colonies / (dilution * plated_volume_ml)
-# Učitavanje pozadine
 def set_bg(img_file):
     with open(img_file, "rb") as f:
-        data = f.read()
-    encoded = base64.b64encode(data).decode()
-
+        encoded = base64.b64encode(f.read()).decode()
     st.markdown(
         f"""
         <style>
@@ -58,100 +35,149 @@ def set_bg(img_file):
         unsafe_allow_html=True
     )
 
+def panel_start():
+    st.markdown('<div class="cloud-panel">', unsafe_allow_html=True)
+
+def panel_end():
+    st.markdown('</div>', unsafe_allow_html=True)
+
+
+
+# --------------------------------------------------
+# Global CSS (Cloud-safe)
+# --------------------------------------------------
+
+st.markdown("""
+<style>
+
+/* Transparent app wrapper */
+.stApp {
+    background: transparent;
+}
+
+
+/* Glass effect only if supported */
+@supports ((-webkit-backdrop-filter: blur(8px)) or (backdrop-filter: blur(8px))) {
+    #cloud-safe-box {
+        background: rgba(255, 255, 255, 0.60);
+        backdrop-filter: blur(8px);
+    }
+}
+
+/* Tabs styling */
+div[data-testid="stTabs"] {
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(6px);
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+    padding-bottom: 6px;
+}
+
+button[data-baseweb="tab"] {
+    background: rgba(255,255,255,0.55);
+    border-radius: 12px;
+    padding: 6px 14px;
+    margin-right: 6px;
+    border: 1px solid rgba(0,0,0,0.15);
+}
+
+button[data-baseweb="tab"][aria-selected="true"] {
+    background: rgba(255,255,255,0.90);
+    font-weight: 600;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# --------------------------------------------------
+# Background image
+# --------------------------------------------------
+
 set_bg("background.jpg")
 
-st.markdown("""
-<style>
-[data-testid="stMainBlockContainer"] {
-    background-color: rgba(255,255,255,0.85);
-    box-shadow: 0px 0px 30px rgba(0,0,0,0.3);
-}
-[data-testid="stMainBlockContainer"] * {
-    color: black !important;
-}
-</style>
-""", unsafe_allow_html=True)
+# --------------------------------------------------
+# Tabs
+# --------------------------------------------------
 
-st.markdown("""
-<style>
+tab_cfu, tab_color, tab_ref = st.tabs(
+    [
+        "Praćenje toka fermentacije (CFU)",
+        "Izračunavanje obojenosti piva (EBC/SRM)",
+        "Skala obojenosti",
+    ]
+)
 
-/* Default: light panel */
-[data-testid="stMainBlockContainer"] {
-    background-color: rgba(255,255,255,0.85);
-}
-[data-testid="stMainBlockContainer"] * {
-    color: black !important;
-}
 
-/* Dark mode adaptive */
-@media (prefers-color-scheme: dark) {
-  [data-testid="stMainBlockContainer"] {
-    background-color: rgba(30,30,30,0.85);
-  }
-  [data-testid="stMainBlockContainer"] * {
-    color: white !important;
-  }
-}
+# --------------------------------------------------
+# Session state
+# --------------------------------------------------
 
-</style>
-""", unsafe_allow_html=True)
-
-# Session storage
 if "data" not in st.session_state:
     st.session_state.data = []
 
-st.header("Dodavanje merenja")
+# --------------------------------------------------
+# CFU TAB
+# --------------------------------------------------
 
-time_point = st.number_input("Vreme uzorkovanja (h)", min_value=0.0, step=1.0)
-colonies = st.number_input("Broj kolonija", min_value=0, step=1)
-dilution_exp = st.number_input("Eksponent razblaženja (za 10^-5 uneti 5)", min_value=1, step=1)
-volume = st.number_input("Zasejani volumen (mL)", value=0.1)
+with tab_cfu:
+    panel_start()
+    st.title("CFU metoda")
+    st.markdown("***Osnovi biotehnologije 2025/26***")
 
-if st.button("Dodaj merenje"):
-    dilution = 10 ** (-dilution_exp)
-    value = cfu_ml(colonies, dilution, volume)
+    st.header("Dodavanje merenja")
 
-    st.session_state.data.append({
-        "Time (h)": time_point,
-        "CFU/mL": value
-    })
+    time_point = st.number_input("Vreme uzorkovanja (h)", min_value=0.0, step=1.0)
+    colonies = st.number_input("Broj kolonija", min_value=0, step=1)
+    dilution_exp = st.number_input(
+        "Eksponent razblaženja (za 10⁻⁵ uneti 5)", min_value=1, step=1
+    )
+    volume = st.number_input("Zasejani volumen (mL)", value=0.1)
 
-    st.success(f"Dodato: {value:.2e} CFU/mL")
+    if st.button("Dodaj merenje"):
+        dilution = 10 ** (-dilution_exp)
+        value = cfu_ml(colonies, dilution, volume)
 
+        st.session_state.data.append(
+            {"Time (h)": time_point, "CFU/mL": value}
+        )
 
-st.header("Podaci")
+        st.success(f"Dodato: {value:.2e} CFU/mL")
 
-if st.session_state.data:
-    df = pd.DataFrame(st.session_state.data)
+    if st.session_state.data:
+        st.header("Podaci")
 
-    # proseci po vremenu
-    df_avg = df.groupby("Time (h)").mean().reset_index()
+        df = pd.DataFrame(st.session_state.data)
+        df_avg = df.groupby("Time (h)").mean().reset_index()
 
-    st.dataframe(df_avg)
+        st.dataframe(df_avg)
 
-    st.header("Kriva fermentacije")
+        st.header("Kriva fermentacije")
 
-    fig, ax = plt.subplots()
-    ax.plot(df_avg["Time (h)"], df_avg["CFU/mL"], marker="o")
-    ax.set_yscale("log")
-    ax.set_xlabel("Vreme (h)")
-    ax.set_ylabel("CFU/mL")
-    ax.set_title("Rast kvasca tokom fermentacije")
-    ax.grid(True)
+        fig, ax = plt.subplots()
+        ax.plot(df_avg["Time (h)"], df_avg["CFU/mL"], marker="o")
+        ax.set_yscale("log")
+        ax.set_xlabel("Vreme (h)")
+        ax.set_ylabel("CFU/mL")
+        ax.set_title("Rast kvasca tokom fermentacije")
+        ax.grid(True)
 
-    st.pyplot(fig)
+        st.pyplot(fig)
 
-    if st.button("Resetuj podatke"):
-        st.session_state.data = []
+        if st.button("Resetuj podatke"):
+            st.session_state.data = []
+    panel_end()
+# --------------------------------------------------
+# COLOR TAB
+# --------------------------------------------------
 
 with tab_color:
-
+    panel_start()
     st.header("Spektrofotometrijsko merenje obojenosti")
 
     od430 = st.number_input(
         "Vrednost absorbance na 430 nm (OD₄₃₀)",
         min_value=0.0,
-        step=0.01
+        step=0.01,
     )
 
     if od430 > 0:
@@ -167,21 +193,27 @@ with tab_color:
         st.markdown(
             f"""
             <div style="
-                width: 120px;
-                height: 120px;
-                background-color: {hex_color};
-                border: 1px solid black;
+                width:120px;
+                height:120px;
+                background:{hex_color};
+                border:1px solid black;
+                border-radius:8px;
             ">
             </div>
             """,
-            unsafe_allow_html=True
+            unsafe_allow_html=True,
         )
 
         st.caption(
-            "Izračunata obojenost predstavlja približu vrednost u odnosu na referentne EBC/SRM standarde."
+            "Obojenost je aproksimacija zasnovana na EBC/SRM standardima."
         )
-with tab_ref:
+    panel_end()
+# --------------------------------------------------
+# REFERENCE TAB
+# --------------------------------------------------
 
+with tab_ref:
+    panel_start()
     st.header("EBC / SRM referentne skale")
 
     ref = [
@@ -201,16 +233,19 @@ with tab_ref:
 
         st.markdown(
             f"""
-            <div style="display:flex; align-items:center; margin-bottom:6px;">
+            <div style="display:flex; align-items:center; margin-bottom:8px;">
                 <div style="
-                    width:40px; height:40px;
+                    width:40px;
+                    height:40px;
                     background:{color};
                     border:1px solid black;
                     margin-right:10px;
+                    border-radius:6px;
                 "></div>
                 <b>{name}</b> — {ebc_min}–{ebc_max} EBC
             </div>
             """,
-            unsafe_allow_html=True
+            unsafe_allow_html=True,
         )
 
+    panel_end()
