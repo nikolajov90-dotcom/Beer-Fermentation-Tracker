@@ -50,21 +50,9 @@ def panel_end():
 st.markdown("""
 <style>
 
-/* Transparent app wrapper */
-.stApp {
-    background: transparent;
-}
+/* ===== BASE (light by default) ===== */
 
-
-/* Glass effect only if supported */
-@supports ((-webkit-backdrop-filter: blur(8px)) or (backdrop-filter: blur(8px))) {
-    #cloud-safe-box {
-        background: rgba(255, 255, 255, 0.60);
-        backdrop-filter: blur(8px);
-    }
-}
-
-/* Tabs styling */
+/* Tabs */
 div[data-testid="stTabs"] {
     background: rgba(255,255,255,0.75);
     backdrop-filter: blur(6px);
@@ -79,11 +67,42 @@ button[data-baseweb="tab"] {
     padding: 6px 14px;
     margin-right: 6px;
     border: 1px solid rgba(0,0,0,0.15);
+    color: #111;
 }
 
 button[data-baseweb="tab"][aria-selected="true"] {
     background: rgba(255,255,255,0.90);
     font-weight: 600;
+}
+
+/* ===== DARK MODE (browser / OS) ===== */
+
+@media (prefers-color-scheme: dark) {
+
+    .cloud-panel {
+        background: rgba(30, 30, 30, 0.88);
+        box-shadow: 0 0 40px rgba(0,0,0,0.8);
+        color: #eee;
+    }
+
+    .cloud-panel * {
+        color: #eee !important;
+    }
+
+    div[data-testid="stTabs"] {
+        background: rgba(25,25,25,0.75);
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    button[data-baseweb="tab"] {
+        background: rgba(50,50,50,0.55);
+        color: #eee;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    button[data-baseweb="tab"][aria-selected="true"] {
+        background: rgba(80,80,80,0.85);
+    }
 }
 
 </style>
