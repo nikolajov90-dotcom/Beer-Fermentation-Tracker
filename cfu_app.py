@@ -20,9 +20,12 @@ st.markdown("""
     background: transparent;
 }
 
-/* glavni streamlit wrapper */
+/* glavni wrapper */
 section[data-testid="stMain"] {
     background: transparent;
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 20px;
+    padding: 1rem;
 }
 
 
